@@ -20,16 +20,36 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			System.out.println( "ERROR! CLASS DEFINITION NOT FOUND!" ) ;
 		}
 	}
+	
+	public void fillFilmFromDB( Film film , ResultSet rs ) throws SQLException {
+		
+		film.setId( rs.getInt( "film.id" ) ) ;
+		film.setTitle( rs.getString( "title" ) ) ;
+		film.setDescription( rs.getString( "description" ) ) ;
+		film.setReleaseYear( rs.getInt( "release_year" ) ) ;
+		film.setLanguageId( rs.getString( "language_id" ) ) ;
+		film.setLanguage( rs.getString( "name" ) );
+		film.setRentalDuration( rs.getInt( "rental_duration" ) ) ;
+		film.setRentalRate( rs.getDouble( "rental_rate" ) ) ;
+		film.setLength( rs.getInt( "length" ) ) ;
+		film.setReplacementCost( rs.getDouble( "replacement_cost" ) ) ;
+		film.setRating( rs.getString( "rating" ) ) ;
+		film.setSpecialFeatures( rs.getString( "special_features" ) ) ;
+		film.setActors( findActorsByFilmId( Integer.parseInt( rs.getString( "film.id" ) ) ) );
+		
+	}
 
 	@Override
 	public Film findFilmById( int filmId ) {
 
 		Film film = null ;
-		String sqltxt = "SELECT * FROM film WHERE id = ?" ;
+		String sqltxt = "SELECT * FROM film " +
+		"JOIN language ON film.language_id = language.id " +
+		"WHERE film.id = ?" ;
 
 		try {
-			Connection conn = DriverManager.getConnection( "jdbc:mysql://localhost:3306/sdvid?useSSL=false" , "student" ,
-					"student" ) ;
+			Connection conn = DriverManager.getConnection(
+					"jdbc:mysql://localhost:3306/sdvid?useSSL=false" , "student" , "student" ) ;
 			PreparedStatement stmt = conn.prepareStatement( sqltxt ) ;
 			stmt.setInt( 1 , filmId ) ;
 			ResultSet rs = stmt.executeQuery() ;
@@ -37,18 +57,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			if ( rs.next() ) {
 
 				film = new Film() ;
-				film.setId( rs.getInt( "id" ) ) ;
-				film.setTitle( rs.getString( "title" ) ) ;
-				film.setDescription( rs.getString( "description" ) ) ;
-				film.setReleaseYear( rs.getInt( "release_year" ) ) ;
-				film.setLanguageId( rs.getString( "language_id" ) ) ;
-				film.setRentalDuration( rs.getInt( "rental_duration" ) ) ;
-				film.setRentalRate( rs.getDouble( "rental_rate" ) ) ;
-				film.setLength( rs.getInt( "length" ) ) ;
-				film.setReplacementCost( rs.getDouble( "replacement_cost" ) ) ;
-				film.setRating( rs.getString( "rating" ) ) ;
-				film.setSpecialFeatures( rs.getString( "special_features" ) ) ;
-				film.setActors( findActorsByFilmId( filmId ) ) ;
+				fillFilmFromDB( film , rs );
 
 				rs.close() ;
 				stmt.close() ;
@@ -63,6 +72,53 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		return film ;
 
 	}
+	
+	public Film findFilmByKeyword( String keyword ) {
+		
+		/*
+		 * Retrieves all films matching a specified keyword in title or description. If
+		 * any films are found, returns the first one as a Film Object. Otherwise
+		 * returns null.
+		 */
+		
+		Film film = null;
+		String sqltxt = "SELECT * FROM film WHERE title LIKE ? OR description LIKE ?;";
+		try {
+			Connection conn = DriverManager.getConnection(
+				"jdbc:mysql://localhost:3306/sdvid?useSSL=false" , "student" , "student" ) ;
+			PreparedStatement stmt = conn.prepareStatement( sqltxt ) ;
+			stmt.setString( 1 , keyword );
+			stmt.setString( 2 , keyword );
+			ResultSet rs = stmt.executeQuery();
+			
+			if ( rs.next() ) {
+
+				film = new Film() ;
+				film.setId( rs.getInt( "id" ) ) ;
+				film.setTitle( rs.getString( "title" ) ) ;
+				film.setDescription( rs.getString( "description" ) ) ;
+				film.setReleaseYear( rs.getInt( "release_year" ) ) ;
+				film.setLanguageId( rs.getString( "language_id" ) ) ;
+				film.setLanguage( rs.getString( "name" ) );
+				film.setRentalDuration( rs.getInt( "rental_duration" ) ) ;
+				film.setRentalRate( rs.getDouble( "rental_rate" ) ) ;
+				film.setLength( rs.getInt( "length" ) ) ;
+				film.setReplacementCost( rs.getDouble( "replacement_cost" ) ) ;
+				film.setRating( rs.getString( "rating" ) ) ;
+				film.setSpecialFeatures( rs.getString( "special_features" ) ) ;
+				film.setActors( findActorsByFilmId( rs.getInt( "id" ) ) ) ;
+
+				rs.close() ;
+				stmt.close() ;
+				conn.close() ;
+
+			}
+		} catch ( SQLException e ) {
+			e.printStackTrace();
+		}
+		
+		return film;
+	}
 
 	public List < Actor > findActorsByFilmId( int filmId ) {
 
@@ -73,8 +129,8 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 
 
 		try {
-			Connection conn = DriverManager.getConnection( "jdbc:mysql://localhost:3306/sdvid?useSSL=false" , "student" ,
-					"student" ) ;
+			Connection conn = DriverManager.getConnection(
+				"jdbc:mysql://localhost:3306/sdvid?useSSL=false" , "student" , "student" ) ;
 			PreparedStatement stmt = conn.prepareStatement( sqltxt ) ;
 			stmt.setInt( 1 , filmId ) ;
 			ResultSet rs = stmt.executeQuery() ;

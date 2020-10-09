@@ -13,8 +13,8 @@ public class FilmQueryApp {
 
   public static void main(String[] args) {
     FilmQueryApp app = new FilmQueryApp();
-    app.test();
-    //app.launch();
+//    app.test();
+    app.launch();
   }
 
   private void test() {
@@ -31,7 +31,80 @@ public class FilmQueryApp {
   }
 
   private void startUserInterface(Scanner input) {
-    
+    boolean keepGoing;
+  	do {
+  		
+  		keepGoing = mainMenu( input );
+  		
+  	} while ( keepGoing );
+  	
+  }
+  
+  private boolean mainMenu( Scanner kb ) {
+  	int menuSelection;
+  	
+  	printMainMenu();
+  	try {
+  		menuSelection = kb.nextInt();
+  		kb.nextLine();
+  		if ( menuSelection < 0  || menuSelection > 3 ) {
+  			throw new NumberFormatException();
+  		}
+  		switch( menuSelection ) {
+  			case 0:
+  				System.out.println( "Come back soon!" ) ;
+  				return false;
+  			case 1:
+  				lookUpFilmById( kb );
+  				break;
+  			case 2:
+  				lookUpFilmByKeyword( kb );
+  				break;
+  		}
+  		
+  	} catch ( NumberFormatException e ) {
+  		System.out.println( "Invalid input. Please enter one of the menu options listed. " ) ;
+  		return mainMenu( kb );
+  	}
+  	
+  	return true;
+  	
+  }
+  
+  private void printMainMenu() {
+  	
+  	String endLine = "___________________________________________";
+  	
+  	System.out.println( endLine ) ;
+  	System.out.println( "| 1. Look up a film by its ID |" ) ;
+  	System.out.println( "| 2. Look up a film by a search keyword |" );
+  	System.out.println( "|                                      |" ) ;
+  	System.out.println( "| 0. Quit |" ) ;
+  	System.out.println( endLine ) ;
+  	System.out.println(  ) ;
+  	System.out.print( "What would you like to do? " ) ;
+  	
+  }
+  
+  private void lookUpFilmById( Scanner kb ) {
+  	
+  	System.out.print( "What film ID would you like to look up? " ) ;
+  	int lookupId = kb.nextInt();
+  	kb.nextLine();
+  	Film film = this.db.findFilmById( lookupId );
+  	System.out.println(
+  			film != null ? film :
+  			String.format( "Sorry, no film found with ID %d" , lookupId ) ) ;
+  	
+  }
+  
+  private void lookUpFilmByKeyword( Scanner kb ) {
+  	System.out.print( "Please enter a keyword to search by: " ) ;
+  	String lookupKeyword = kb.nextLine();
+  	Film film = this.db.findFilmByKeyword( String.format( "%%%s%%" , lookupKeyword.toUpperCase() ) );
+  	System.out.println(
+  			film != null ? film :
+  			String.format( "Sorry, no films found matching keyword '%s'" , lookupKeyword )) ;
   }
 
 }
