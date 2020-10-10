@@ -21,7 +21,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		}
 	}
 	
-	public void fillFilmFromDB( Film film , ResultSet rs ) throws SQLException {
+	public void fillFilmFromDB( Film film , ResultSet rs , Connection conn ) throws SQLException {
 		
 		film.setId( rs.getInt( "film.id" ) ) ;
 		film.setTitle( rs.getString( "title" ) ) ;
@@ -37,6 +37,25 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		film.setSpecialFeatures( rs.getString( "special_features" ) ) ;
 		film.setActors( findActorsByFilmId( rs.getInt( "film.id" ) ) ) ;
 		film.setCategory( rs.getString( "category") );
+		
+		List<String> copies = new ArrayList<String>();
+		
+		String sqltxt = "SELECT id , media_condition from inventory_item WHERE film_id = ?;";
+		
+		PreparedStatement inv_query = conn.prepareStatement( sqltxt );
+		inv_query.setInt( 1 , rs.getInt( "film.id" ) );
+		ResultSet inv = inv_query.executeQuery();
+		
+		while ( inv.next() ) {
+			copies.add( String.format(
+					"%d\t%s" ,
+					inv.getInt( "id" ) ,
+					inv.getString( "media_condition" ) ) ); 
+		}
+		
+		film.setInventory( copies );
+		inv.close();
+		inv_query.close();
 		
 	}
 
@@ -59,7 +78,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			if ( rs.next() ) {
 
 				film = new Film() ;
-				fillFilmFromDB( film , rs );
+				fillFilmFromDB( film , rs , conn );
 
 				rs.close() ;
 				stmt.close() ;
@@ -100,7 +119,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			if ( rs.next() ) {
 
 				film = new Film() ;
-				fillFilmFromDB( film , rs );
+				fillFilmFromDB( film , rs , conn );
 
 				rs.close() ;
 				stmt.close() ;

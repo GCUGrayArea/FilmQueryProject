@@ -79,14 +79,13 @@ public class FilmQueryApp {
   
   private void printMainMenu() {
   	
-  	String endLine = "___________________________________________";
-  	
-  	System.out.println( endLine ) ;
-  	System.out.println( "| 1. Look up a film by its ID |" ) ;
+  	System.out.println( "_________________________________________" ) ;
+  	System.out.println( "|                                       |" ) ;
+  	System.out.println( "| 1. Look up a film by its ID           |" ) ;
   	System.out.println( "| 2. Look up a film by a search keyword |" );
-  	System.out.println( "|                                      |" ) ;
-  	System.out.println( "| 0. Quit |" ) ;
-  	System.out.println( endLine ) ;
+  	System.out.println( "|                                       |" ) ;
+  	System.out.println( "| 0. Quit                               |" ) ;
+  	System.out.println( "|_______________________________________|" ) ;
   	System.out.println(  ) ;
   	System.out.print( "What would you like to do? " ) ;
   	
@@ -96,11 +95,10 @@ public class FilmQueryApp {
   	
   	if ( film == null ) { return; } //not offered if no film was found
   	
-		String endLine = "____________________________";
-		System.out.println( endLine ) ;
+		System.out.println( "____________________________" ) ;
 		System.out.println( "| 1. View all film details |" ) ;
 		System.out.println( "| 2. Return to main menu   |" ) ;
-		System.out.println( endLine ) ;
+		System.out.println( "|__________________________|" ) ;
 		System.out.println() ;
 		System.out.print( "What would you like to do now? " ) ;
 		int subMenuSelection;

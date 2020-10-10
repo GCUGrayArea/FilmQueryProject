@@ -18,6 +18,7 @@ public class Film {
 	private String specialFeatures;
 	private List<Actor> actors;
 	private String category;
+	private List<String> inventory;
 	
 	public int getId() {
 	
@@ -189,6 +190,20 @@ public class Film {
 	
 	}
 
+	
+	public List<String> getInventory() {
+	
+		return inventory ;
+	
+	}
+
+	
+	public void setInventory( List<String> inventory ) {
+	
+		this.inventory = inventory ;
+	
+	}
+
 	@Override
 	public String toString() {
 		
@@ -228,11 +243,33 @@ public class Film {
 							a.getFirstName() ,
 							a.getLastName() ) );
 		}
+		
+		StringBuilder copies = new StringBuilder();
+		copies.append( "Copies on hand:\nID\tCondition\n" );
+		for ( String s : inventory ) {
+			copies.append( s );
+			copies.append( '\n' );
+		}
 
 		return String.format(
-				"Film [id=%d%ntitle=%s%ndescription=%s%nreleaseYear=%d%nlanguageId=%d%nlanguage=%s%nrentalDuration=%d%nrentalRate=%.2f%nlength=%d%nreplacementCost=%.2f%nrating=%s%nspecialFeatures=%s%nactors=%s%ncategory=%s]" ,
+				"Film%n" +
+		"id: %d%n" +
+		"title=%s%n" +
+		"description=%s%n" +
+		"releaseYear=%d%n" +
+		"languageId=%d%n" +
+		"language=%s%n" +
+		"rentalDuration=%d%n" +
+		"rentalRate=%.2f%n" +
+		"length=%d%n" +
+		"replacementCost=%.2f%n" +
+		"rating=%s%n" +
+		"specialFeatures=%s%n" +
+		"actors=%s%n" +
+		"category=%s%n" +
+		"%s",
 				id , title , description , releaseYear , languageId , language , rentalDuration , rentalRate , length ,
-				replacementCost , rating , specialFeatures , cast.toString() , category ) ;
+				replacementCost , rating , specialFeatures , cast.toString() , category , copies.toString() ) ;
 
 	}
 
