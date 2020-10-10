@@ -8,7 +8,7 @@ public class Film {
 	private String title;
 	private String description;
 	private int releaseYear;
-	private String languageId;
+	private int languageId;
 	private String language;
 	private int rentalDuration;
 	private double rentalRate;
@@ -67,13 +67,13 @@ public class Film {
 	
 	}
 	
-	public String getLanguageId() {
+	public int getLanguageId() {
 	
 		return languageId ;
 	
 	}
 	
-	public void setLanguageId( String languageId ) {
+	public void setLanguageId( int languageId ) {
 	
 		this.languageId = languageId ;
 	
@@ -175,7 +175,22 @@ public class Film {
 		
 	}
 
-	public String basicInfo() {
+	
+	public String getCategory() {
+	
+		return category ;
+	
+	}
+
+	
+	public void setCategory( String category ) {
+	
+		this.category = category ;
+	
+	}
+
+	@Override
+	public String toString() {
 		
 		StringBuilder actorList = null;
 		
@@ -191,14 +206,37 @@ public class Film {
 		}
 	}
 		return String.format( 
-				"%s (%d)%nLanguage: %s%nDescription: %s%nRated %s%n%n%s",
+				"%s (%d)%nLanguage: %s%nCategory: %s%nDescription: %s%nRated %s%n%n%s",
 				this.title ,
 				this.releaseYear ,
 				this.language ,
+				this.category ,
 				this.description ,
 				this.rating ,
 				actorList );
 				
 	}
+
+	public String allInfo() {
+		
+		StringBuilder cast = new StringBuilder();
+		cast.append( "Cast: ");
+		for ( Actor a : this.actors ) {
+			cast.append(
+					String.format(
+							"%s %s, " ,
+							a.getFirstName() ,
+							a.getLastName() ) );
+		}
+
+		return String.format(
+				"Film [id=%d%ntitle=%s%ndescription=%s%nreleaseYear=%d%nlanguageId=%d%nlanguage=%s%nrentalDuration=%d%nrentalRate=%.2f%nlength=%d%nreplacementCost=%.2f%nrating=%s%nspecialFeatures=%s%nactors=%s%ncategory=%s]" ,
+				id , title , description , releaseYear , languageId , language , rentalDuration , rentalRate , length ,
+				replacementCost , rating , specialFeatures , cast.toString() , category ) ;
+
+	}
+
+
+	
 	
 }

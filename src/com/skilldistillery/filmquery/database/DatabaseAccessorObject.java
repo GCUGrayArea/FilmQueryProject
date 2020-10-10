@@ -27,7 +27,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		film.setTitle( rs.getString( "title" ) ) ;
 		film.setDescription( rs.getString( "description" ) ) ;
 		film.setReleaseYear( rs.getInt( "release_year" ) ) ;
-		film.setLanguageId( rs.getString( "language_id" ) ) ;
+		film.setLanguageId( rs.getInt( "language_id" ) ) ;
 		film.setLanguage( rs.getString( "name" ) );
 		film.setRentalDuration( rs.getInt( "rental_duration" ) ) ;
 		film.setRentalRate( rs.getDouble( "rental_rate" ) ) ;
@@ -35,7 +35,8 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		film.setReplacementCost( rs.getDouble( "replacement_cost" ) ) ;
 		film.setRating( rs.getString( "rating" ) ) ;
 		film.setSpecialFeatures( rs.getString( "special_features" ) ) ;
-		film.setActors( findActorsByFilmId( Integer.parseInt( rs.getString( "film.id" ) ) ) );
+		film.setActors( findActorsByFilmId( rs.getInt( "film.id" ) ) ) ;
+		film.setCategory( rs.getString( "category") );
 		
 	}
 
@@ -45,6 +46,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		Film film = null ;
 		String sqltxt = "SELECT * FROM film " +
 		"JOIN language ON film.language_id = language.id " +
+		"JOIN film_list on film.id = film_list.FID " +
 		"WHERE film.id = ?" ;
 
 		try {
@@ -82,7 +84,11 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		 */
 		
 		Film film = null;
-		String sqltxt = "SELECT * FROM film WHERE title LIKE ? OR description LIKE ?;";
+		String sqltxt = "SELECT * FROM film " +
+		"JOIN language ON film.language_id = language.id " +
+		"JOIN film_list on film.id = film_list.FID " +
+		"WHERE film.title LIKE ? OR film.description LIKE ?;";
+		
 		try {
 			Connection conn = DriverManager.getConnection(
 				"jdbc:mysql://localhost:3306/sdvid?useSSL=false" , "student" , "student" ) ;
@@ -94,19 +100,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			if ( rs.next() ) {
 
 				film = new Film() ;
-				film.setId( rs.getInt( "id" ) ) ;
-				film.setTitle( rs.getString( "title" ) ) ;
-				film.setDescription( rs.getString( "description" ) ) ;
-				film.setReleaseYear( rs.getInt( "release_year" ) ) ;
-				film.setLanguageId( rs.getString( "language_id" ) ) ;
-				film.setLanguage( rs.getString( "name" ) );
-				film.setRentalDuration( rs.getInt( "rental_duration" ) ) ;
-				film.setRentalRate( rs.getDouble( "rental_rate" ) ) ;
-				film.setLength( rs.getInt( "length" ) ) ;
-				film.setReplacementCost( rs.getDouble( "replacement_cost" ) ) ;
-				film.setRating( rs.getString( "rating" ) ) ;
-				film.setSpecialFeatures( rs.getString( "special_features" ) ) ;
-				film.setActors( findActorsByFilmId( rs.getInt( "id" ) ) ) ;
+				fillFilmFromDB( film , rs );
 
 				rs.close() ;
 				stmt.close() ;
