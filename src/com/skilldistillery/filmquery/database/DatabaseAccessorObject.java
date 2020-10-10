@@ -102,6 +102,8 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		 * returns null.
 		 */
 		
+		String sqlKeyword = String.format( "%%%s%%" , keyword.toUpperCase() );
+		
 		Film film = null;
 		String sqltxt = "SELECT * FROM film " +
 		"JOIN language ON film.language_id = language.id " +
@@ -112,8 +114,8 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			Connection conn = DriverManager.getConnection(
 				"jdbc:mysql://localhost:3306/sdvid?useSSL=false" , "student" , "student" ) ;
 			PreparedStatement stmt = conn.prepareStatement( sqltxt ) ;
-			stmt.setString( 1 , keyword );
-			stmt.setString( 2 , keyword );
+			stmt.setString( 1 , sqlKeyword );
+			stmt.setString( 2 , sqlKeyword );
 			ResultSet rs = stmt.executeQuery();
 			
 			if ( rs.next() ) {

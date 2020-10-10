@@ -17,10 +17,10 @@ public class FilmQueryApp {
     app.launch();
   }
 
-  private void test() {
-    Film film = db.findFilmById(1);
-    System.out.println(film);
-  }
+//  private void test() {
+//    Film film = db.findFilmById(1);
+//    System.out.println(film);
+//  }
 
   private void launch() {
     Scanner input = new Scanner(System.in);
@@ -142,7 +142,7 @@ public class FilmQueryApp {
   	
   	System.out.print( "Please enter a keyword to search by: " ) ;
   	String lookupKeyword = kb.nextLine();
-  	Film film = this.db.findFilmByKeyword( String.format( "%%%s%%" , lookupKeyword.toUpperCase() ) );
+  	Film film = this.db.findFilmByKeyword( lookupKeyword );
   	System.out.println(
   			film != null ? film :
   			String.format( "Sorry, no films found matching keyword '%s'" , lookupKeyword )) ;
