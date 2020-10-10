@@ -23,24 +23,27 @@ public class FilmQueryApp {
 //  }
 
   private void launch() {
+  	
     Scanner input = new Scanner(System.in);
     
-    startUserInterface(input);
-    
-    input.close();
-  }
-
-  private void startUserInterface(Scanner input) {
     boolean keepGoing;
+    
+    System.out.println( "Welcome to Gray's Film Query Application!" ) ;
+    System.out.println( "(powered by MySQL, Java and also actual coffee)" ) ;
+    System.out.println( "created for Skill Distillery 27, week 7 homework" ) ;
+    
   	do {
   		
   		keepGoing = mainMenu( input );
   		
   	} while ( keepGoing );
-  	
+    
+    input.close();
+    
   }
   
   private boolean mainMenu( Scanner kb ) {
+  	
   	int menuSelection;
   	
   	printMainMenu();

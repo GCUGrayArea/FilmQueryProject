@@ -37,6 +37,18 @@ class DatabaseAccessTests {
   }
   
   @Test
+  void test_getFilmById_with_good_id_returns_not_null() {
+  	Film f = db.findFilmById( 1 );
+  	assertNotNull(f);
+  }
+  
+  @Test
+  void test_getFilmById_with_good_keyword_returns_not_null() {
+  	Film f = db.findFilmByKeyword( "DRAGON" );
+  	assertNotNull(f);
+  }
+  
+  @Test
   void test_getFilmByKeyword_with_working_keyword_fills_all_fields() {
   	
   	Film f = db.findFilmByKeyword( "cas" );
