@@ -10,6 +10,7 @@ import java.util.List ;
 
 import com.skilldistillery.filmquery.entities.Actor ;
 import com.skilldistillery.filmquery.entities.Film ;
+import com.skilldistillery.filmquery.entities.InventoryItem ;
 
 public class DatabaseAccessorObject implements DatabaseAccessor {
 	
@@ -38,7 +39,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		film.setActors( findActorsByFilmId( rs.getInt( "film.id" ) ) ) ;
 		film.setCategory( rs.getString( "category") );
 		
-		List<String> copies = new ArrayList<String>();
+		List<InventoryItem> copies = new ArrayList<InventoryItem>();
 		
 		String sqltxt = "SELECT id , media_condition from inventory_item WHERE film_id = ?;";
 		
@@ -47,10 +48,8 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		ResultSet inv = inv_query.executeQuery();
 		
 		while ( inv.next() ) {
-			copies.add( String.format(
-					"%d\t%s" ,
-					inv.getInt( "id" ) ,
-					inv.getString( "media_condition" ) ) ); 
+			copies.add( new InventoryItem( inv.getInt( "id" ) , inv.getString( "media_condition" ) ) ); 
+			
 		}
 		
 		film.setInventory( copies );

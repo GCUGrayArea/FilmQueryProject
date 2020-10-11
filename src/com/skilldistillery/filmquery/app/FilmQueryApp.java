@@ -99,6 +99,7 @@ public class FilmQueryApp {
   	if ( film == null ) { return; } //not offered if no film was found
   	
 		System.out.println( "____________________________" ) ;
+		System.out.println( "|                          |" ) ;
 		System.out.println( "| 1. View all film details |" ) ;
 		System.out.println( "| 2. Return to main menu   |" ) ;
 		System.out.println( "|__________________________|" ) ;

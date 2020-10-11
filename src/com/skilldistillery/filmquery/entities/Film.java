@@ -18,7 +18,7 @@ public class Film {
 	private String specialFeatures;
 	private List<Actor> actors;
 	private String category;
-	private List<String> inventory;
+	private List<InventoryItem> inventory;
 	
 	public int getId() {
 	
@@ -191,14 +191,14 @@ public class Film {
 	}
 
 	
-	public List<String> getInventory() {
+	public List<InventoryItem> getInventory() {
 	
 		return inventory ;
 	
 	}
 
 	
-	public void setInventory( List<String> inventory ) {
+	public void setInventory( List<InventoryItem> inventory ) {
 	
 		this.inventory = inventory ;
 	
@@ -239,15 +239,18 @@ public class Film {
 		for ( Actor a : this.actors ) {
 			cast.append(
 					String.format(
-							"%s %s, " ,
+							"%s %s" ,
 							a.getFirstName() ,
 							a.getLastName() ) );
+			if (this.actors.indexOf(a) < this.actors.size() - 1 ) {
+				cast.append( ", " );
+			}
 		}
 		
 		StringBuilder copies = new StringBuilder();
 		copies.append( "Copies on hand:\nID\tCondition\n" );
-		for ( String s : inventory ) {
-			copies.append( s );
+		for ( InventoryItem i: inventory ) {
+			copies.append( i );
 			copies.append( '\n' );
 		}
 
@@ -257,7 +260,6 @@ public class Film {
 		"title=%s%n" +
 		"description=%s%n" +
 		"releaseYear=%d%n" +
-		"languageId=%d%n" +
 		"language=%s%n" +
 		"rentalDuration=%d%n" +
 		"rentalRate=%.2f%n" +
@@ -268,8 +270,20 @@ public class Film {
 		"actors=%s%n" +
 		"category=%s%n" +
 		"%s",
-				id , title , description , releaseYear , languageId , language , rentalDuration , rentalRate , length ,
-				replacementCost , rating , specialFeatures , cast.toString() , category , copies.toString() ) ;
+		id ,
+		title ,
+		description ,
+		releaseYear ,
+		language ,
+		rentalDuration ,
+		rentalRate ,
+		length ,
+		replacementCost ,
+		rating ,
+		specialFeatures ,
+		cast ,
+		category ,
+		copies ) ;
 
 	}
 
